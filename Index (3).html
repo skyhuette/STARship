@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Add Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+
+<meta charset="UTF-8" />
+<title>Aboard the STARship</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: #000;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* VIEWPORT FRAME */
+.viewport-frame {
+    position: fixed;
+    inset: 0;
+
+    /* INNER EDGE (glass seal) */
+    box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,.15),
+        inset 0 0 60px rgba(0,0,0,.8),
+
+        /* FRAME DEPTH */
+        inset 0 0 0 25px #1a1f24,
+        inset 0 0 0 30px #2b3238,
+
+        /* OUTER SHADOW */
+        0 0 60px rgba(0,0,0,.8),
+        0 0 40px rgba(0,164,81,.2);
+
+    background: radial-gradient(circle at center, transparent 60%, rgba(0,0,0,.6));
+    pointer-events: none;
+    z-index: 700;
+}
+
+
+.viewport-vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 899;
+
+    background:
+        radial-gradient(circle at center,
+            transparent 60%,
+            rgba(0,0,0,0.4) 95%,
+            rgba(0,0,0,0.85) 100%);
+}
+
+/* STARFIELD */
+.starfield {
+    position: fixed;
+    background-position: 0 0;
+    inset: 0;
+
+    background-image:
+        radial-gradient(1px 1px at 20% 30%, white, transparent),
+        radial-gradient(1px 1px at 70% 80%, white, transparent),
+        radial-gradient(1px 1px at 40% 60%, white, transparent),
+        radial-gradient(1.5px .5px at 60% 70%, white, transparent);
+
+    background-size: 300px 300px;
+
+    animation: drift 180s linear infinite;
+
+
+
+    /* NEW: soften edges */
+    mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+}
+
+@keyframes drift {
+    to { background-position: 2000px 2000px; }
+}
+
+/* FOOTER */
+footer.log {
+    position: fixed;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    text-align: center;
+    padding: 18px 20px;
+    font-size: 1rem;
+    color: #8bcfff;
+    border-top: 2px solid rgba(120, 200, 255, 0.4);
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+    border-radius: 10px;
+    z-index: 500;
+    font-weight: bold;
+}
+
+
+/* HUD */
+header.hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px 70px;
+    border-bottom: .5px solid rgba(255,255,255,.2);
+    color: #fff;
+    z-index: 10;
+}
+
+.hud h1 {
+	font-family: 'Audiowide', sans-serif;
+    font-size: 2.2rem;
+    font-weight: bold;
+    
+}
+
+.hud p {
+    font-family: 'Orbitron', sans-serif;
+    font-size: .98rem;
+    color: #E5DDCA;
+   
+}
+
+.status {
+    font-size: 1.1rem;
+    color: #00A451;
+
+    font-family: 'Orbitron', sans-serif;
+
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+
+/* SCI-FI FRAME CORNERS */
+.frame-corners {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 899;
+}
+
+.corner {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-color: rgba(0,164,81,.9);
+    filter: drop-shadow(0 0 8px rgba(0,164,81,.7));
+}
+
+.corner::before,
+.corner::after {
+    content: "";
+    position: absolute;
+    background: rgba(0,164,81,.9);
+    box-shadow: 0 0 12px rgba(0,164,81,.8);
+}
+
+
+/* TOP LEFT */
+.tl {
+    top: 18px;
+    left: 18px;
+}
+.tl::before {
+    width: 70px;
+    height: 4px;
+    top: 0;
+    left: 0;
+}
+.tl::after {
+    width: 4px;
+    height: 70px;
+    top: 0;
+    left: 0;
+}
+
+/* TOP RIGHT */
+.tr {
+    top: 18px;
+    right: 18px;
+}
+.tr::before {
+    width: 70px;
+    height: 4px;
+    top: 0;
+    right: 0;
+}
+.tr::after {
+    width: 4px;
+    height: 70px;
+    top: 0;
+    right: 0;
+}
+
+/* BOTTOM LEFT */
+.bl {
+    bottom: 18px;
+    left: 18px;
+}
+.bl::before {
+    width: 70px;
+    height: 4px;
+    bottom: 0;
+    left: 0;
+}
+.bl::after {
+    width: 4px;
+    height: 70px;
+    bottom: 0;
+    left: 0;
+}
+
+/* BOTTOM RIGHT */
+.br {
+    bottom: 18px;
+    right: 18px;
+}
+.br::before {
+    width: 70px;
+    height: 4px;
+    bottom: 0;
+    right: 0;
+}
+.br::after {
+    width: 4px;
+    height: 70px;
+    bottom: 0;
+    right: 0;
+}
+
+/* PLANET BASE */
+.planet {
+    position: absolute;
+    --size: clamp(60px, 20vw, 90px);               /* ✅ sane default size */
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 50%, #444, #111);
+    box-shadow:
+        inset -10px -10px 20px rgba(0,0,0,.25),
+        0 0 12px rgba(255,255,255,.12);
+    transition:
+        transform 1s ease,
+        box-shadow .8s ease,
+        filter .5s ease;
+    transform: scale(1);  
+    transform-origin: center center;/* ✅ explicit base transform */
+}
+
+
+
+/* UNKNOWN PLANET POSITION */
+.unknown {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* ✅ HOVER GROWS (no shrinking) */
+.planet.unknown:hover {
+    transform: translate(-50%, -50%) scale(1.5);
+    box-shadow: 0 0 45px rgba(255,80,80,.9);
+    filter: saturate(1.2) brightness(1.1);
+    z-index: 20;
+}
+
+/* ALERT RINGS */
+.unknown::before,
+.unknown::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.unknown::before {
+    width: 180%;
+    height: 180%;
+    border: 3px solid rgba(255,80,80,.7);
+    animation: alertPulse 2.2s ease-in-out infinite;
+}
+
+.unknown::after {
+    width: 220%;
+    height: 220%;
+    border: 2px dashed rgba(255,120,120,.5);
+    animation: reticleSpin 6s linear infinite;
+}
+
+@keyframes alertPulse {
+    0%,100% { transform: translate(-50%, -50%) scale(.8); opacity:.4; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity:1; }
+}
+
+@keyframes reticleSpin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* LABEL */
+.unknown-label {
+    position: absolute;
+    top: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,60,60,.9);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: .8rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #fff;
+    animation: flicker 1.4s infinite;
+    white-space: nowrap;
+}
+
+@keyframes flicker {
+    0%,100% { opacity:1; }
+    50% { opacity:.3; }
+}
+
+/* IMAGE OVERLAY */
+.mystery-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.mystery-overlay img {
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 12px;
+    box-shadow: 0 0 60px rgba(0,164,81,.85);
+    animation: fadeIn .4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* CLOSE BUTTON */
+.close-overlay {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255,255,255,.12);
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+    z-index: 1001;
+}
+
+
+
+.close-overlay:hover {
+    transform: scale(1.1);
+    background: rgba(0,164,81,.35);
+    box-shadow: 0 0 20px rgba(0,164,81,.6);
+}
+
+/* FOOTER */
+footer.log {
+    position: fixed;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #8bcfff;
+    font-weight: bold;
+}
+
+
+/* FOOTER BUTTON */
+.explore-btn {
+    display: inline-block;
+    font-family: 'Audiowide', sans-serif;
+    padding: 12px 28px;
+    border-radius: 999px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1px;
+    background: rgba(0,164,81,.2);
+    border: 1px solid rgba(0,164,81,.7);
+    box-shadow: 0 0 18px rgba(0,164,81,.35);
+    backdrop-filter: blur(6px);
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background .25s ease;
+}
+
+.explore-btn:hover {
+    transform: scale(1.06);
+    background: rgba(0,164,81,.35);
+    box-shadow: 0 0 28px rgba(0,164,81,.65);
+}
+
+/*BODY
+
+/* =========================
+   MOBILE RESPONSIVE LAYER
+   ========================= */
+
+@media (max-width: 768px) {
+
+    /* HUD layout fix */
+    header.hud {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 30px 20px;
+        gap: 10px;
+    }
+
+    .hud h1 {
+        font-size: 1.4rem;
+    }
+
+    .hud p {
+        font-size: 0.8rem;
+    }
+
+    .status {
+        font-size: 0.8rem;
+        align-self: flex-end;
+    }
+
+    /* Frame adjustment (lighter, not overwhelming) */
+    .viewport-frame {
+        box-shadow:
+            inset 0 0 0 2px rgba(255,255,255,.15),
+            inset 0 0 50px rgba(0,0,0,.8),
+
+            inset 0 0 0 15px #1a1f24,
+            inset 0 0 0 18px #2b3238,
+
+            0 0 40px rgba(0,0,0,.8);
+    }
+
+    /* Footer + button fix */
+    footer.log {
+        width: 90%;
+        bottom: 20px;
+        padding: 14px;
+    }
+
+    .explore-btn {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+}
+
+    /* Label scaling */
+    .unknown-label {
+        top: -45px;
+        font-size: 0.7rem;
+        padding: 8px 14px;
+    }
+
+    /* Reduce star animation intensity */
+    .starfield {
+        animation-duration: 260s;
+    }
+
+    /* ✅ MOBILE INTERACTION FIX (no hover on mobile) */
+    .planet:active {
+        transform: translate(-50%, -50%) scale(1.15);
+        box-shadow: 0 0 25px rgba(255,80,80,.7);
+    }
+
+    /* Reduce hover dependency on mobile */
+    .planet.unknown:hover {
+        transform: translate(-50%, -50%);
+    }
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="viewport-frame"></div>
+
+<div class="viewport-vignette"></div>
+<div class="frame-corners">
+    <span class="corner tl"></span>
+    <span class="corner tr"></span>
+    <span class="corner bl"></span>
+    <span class="corner br"></span>
+</div>
+<div class="starfield"></div>
+
+<header class="hud">
+    <div>
+        <h1>Aboard the STARship</h1>
+        <p>New horizons of appreciation & recognition</p>
+    </div>
+    <div class="status">MISSION STATUS: ACTIVE</div>
+</header>
+
+<div class="planet unknown" id="unknownPlanet">
+    <div class="unknown-label">UNIDENTIFIED</div>
+    <div class="orbit-dot"></div>
+</div>
+
+<footer class="log">
+    <a href="https://s.ul.org/STAR" target="_blank" class="explore-btn">
+        Explore the galaxy
+    </a>
+</footer>
+
+<!-- IMAGE OVERLAY -->
+
+
+<div class="mystery-overlay" id="overlay">
+ <button class="close-overlay" id="closeOverlay">&times;</button>
+    <img id="mysteryImage" alt="Unknown Discovery">
+</div>
+
+<script>
+const images = [
+    "https://i.imgur.com/IItfXDE.jpeg",
+    "https://i.imgur.com/XIpJAy7.jpeg",
+    "https://i.imgur.com/AWKVzFf.jpeg",
+    "https://i.imgur.com/kGEDrdO.jpeg",
+    "https://i.imgur.com/rM70SfT.jpeg",
+    "https://i.imgur.com/zoHsrwI.jpeg"
+];
+
+const planet = document.getElementById("unknownPlanet");
+const overlay = document.getElementById("overlay");
+const img = document.getElementById("mysteryImage");
+
+planet.addEventListener("click", () => {
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+    img.src = randomImage;
+    overlay.style.display = "flex";
+});
+
+overlay.addEventListener("click", () => {
+    overlay.style.display = "none";
+    img.src = "";
+});
+
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") overlay.style.display = "none";
+});
+
+
+planet.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+        planet.click();
+    }
+});
+
+</script>
+
+</body>
+</html>
